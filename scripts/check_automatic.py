@@ -17,7 +17,7 @@ def main():
     assert len(re.findall(r'ffi\.cast\([^\n]*\(\*\)',source))==4
     assert source.count('k.WriteProcessMemory(')==1
     assert "k.WriteProcessMemory(process,ffi.cast('void *',flags_address+1),target,1,count)" in source
-    assert "version='0.6.0-exp06', capture=true" in source
+    assert "version='0.6.1-exp06', capture=true" in source
     runs=[]
     commands=[['luajit','tests/test_automatic.lua'],['luajit','tests/test_gamepad.lua'],
         ['luajit','tests/test_gamepad_mouse_regression.lua'],['luajit','tests/test_mouse.lua'],
@@ -38,9 +38,9 @@ def main():
         tested_exp05_xbox_user_confirmed=True,playstation_hardware_verified=False,
         reload_disarm_root_cause='EXP05 input_guard R fresh edge permanently cleared M.capture',
         activation='AUTOMATIC_LOCAL_C4',reload='TRANSIENT_PAUSE_THEN_RELEASE_BASELINE',
-        mapping=dict(mouse='RMB Deploy / LMB Detonate',xbox='LT Deploy / RT Detonate',playstation='L2 Deploy / R2 Detonate'),
+        mapping=dict(mouse='LMB Deploy / RMB Detonate',xbox='LT Deploy / RT Detonate',playstation='L2 Deploy / R2 Detonate'),
         files={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sorted(files)})
-    (ROOT/'evidence/automatic-offline-tests.json').write_text(json.dumps(report,indent=2)+'\n')
+    (ROOT/'evidence/automatic-offline-tests.json').write_text(json.dumps(report,indent=2)+'\n',newline='\n')
     raise SystemExit(report['exit_code'])
 
 if __name__=='__main__':main()

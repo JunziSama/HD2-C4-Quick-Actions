@@ -27,11 +27,13 @@ local function tick(dt)
         suspend_actions();last_pad_epoch=pad.epoch;last_pad_down={false,false}
     end
     local identity=owned and (gate.identity..':pad:'..pad.epoch) or nil
+    -- The shared router maps its first channel to Detonate and second to Deploy.
+    -- Swap only physical mouse sides here; controller actions stay LT/L2 and RT/R2.
     local request=router.sample(identity,
-        {down=ld or pad.right.down,pressed=lp or pad.right.pressed,released=lr or pad.right.released,
-            label=pad.right.pressed and pad.right.label or 'LMB'},
-        {down=rd or pad.left.down,pressed=rp or pad.left.pressed,released=rr or pad.left.released,
-            label=pad.left.pressed and pad.left.label or 'RMB'})
+        {down=rd or pad.right.down,pressed=rp or pad.right.pressed,released=rr or pad.right.released,
+            label=pad.right.pressed and pad.right.label or 'RMB'},
+        {down=ld or pad.left.down,pressed=lp or pad.left.pressed,released=lr or pad.left.released,
+            label=pad.left.pressed and pad.left.label or 'LMB'})
     poll_mouse(mouse[1],ld,lp,lr);poll_mouse(mouse[2],rd,rp,rr)
     for i,b in ipairs({pad.left,pad.right}) do
         if b.label and (b.pressed or b.released or b.down~=last_pad_down[i]) then
@@ -43,8 +45,8 @@ local function tick(dt)
     end
     actions.step(owned and last_controls_allowed,M.elapsed_ms,{
         deploy=request.deploy,detonate=request.detonate,allowed=last_controls_allowed,mouse=false,
-        deploy_input=pad.left.pressed and pad.left.label or 'RMB',
-        detonate_input=pad.right.pressed and pad.right.label or 'LMB'})
+        deploy_input=pad.left.pressed and pad.left.label or 'LMB',
+        detonate_input=pad.right.pressed and pad.right.label or 'RMB'})
     if file and M.tick%60==0 then assert(file:flush(),'log_flush_failed') end
 end
 local function after_update()

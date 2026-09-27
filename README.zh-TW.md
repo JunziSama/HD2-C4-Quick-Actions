@@ -4,54 +4,42 @@
 
 [English](README.md)
 
-讓《絕地戰兵 2》的 C4 **投擲與引爆分開操作**，支援滑鼠與手柄，拿出 C4 即自動啟用。
-
-| 輸入裝置 | 投擲 C4 | 引爆 C4 |
-| --- | --- | --- |
-| 滑鼠 | 右鍵 | 左鍵 |
-| Xbox 手柄 | LT | RT |
-| PlayStation 手柄 | L2 | R2 |
-
-拿出 C4，先放開滑鼠左右鍵與兩個扳機，即可使用。**不需要按 F6。** R 維持原版補彈流程，補彈完成後可繼續操作；切回其他武器時恢復原本開火操作。
+《絕地戰兵 2》C4 的 **PC 滑鼠鍵盤版**：手持 C4 引爆器時，**滑鼠左鍵投擲，右鍵引爆**。拿出 C4 後自動啟用，不受遊戲目前選擇的 C4 射擊模式影響；其他武器維持原本滑鼠操作。0.7.0 不讀取手柄輸入。
 
 ## 安裝
 
-1. 退出遊戲。
-2. 安裝 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) **v15+ / API 1**，已安裝者保留原有版本。
-3. 將 [HD2-C4-Quick-Actions-v0.6.0.zip](dist/HD2-C4-Quick-Actions-v0.6.0.zip) 匯入 Mod Manager，啟用本模組與 Loader，再部署。
-4. 取代先前 C4 實驗版本（EXP01～EXP06），同時只啟用一個 C4 版本。
+1. 退出遊戲，另外安裝 [Bingus Shared Loader v18](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/v18)。
+2. 將 [HD2-C4-Quick-Actions-v0.7.0-PC.zip](dist/HD2-C4-Quick-Actions-v0.7.0-PC.zip) 匯入 Mod Manager，啟用本模組及 Loader，再部署。
+3. 停用舊版 C4 Quick Actions，同時只啟用一個版本。
 
-`dist/` 內的 ZIP 是安裝包；GitHub 的 Source code ZIP 則是開發資料。Loader 需另外安裝。移除時，由 Mod Manager 停用本模組並重新部署。
+`dist/` 內的 ZIP 是安裝包；GitHub 的 Source code ZIP 是開發資料。建置僅在本地產生 ZIP，不會自動替換遊戲目錄內的 Mod。
 
-## 操作細節
+## 操作
 
-- 投擲、引爆各自對應固定按鍵，不受目前 C4 射擊模式影響。
-- 長按不連發；同時按投擲與引爆時，引爆優先。
-- 補彈時間、動畫與原版動作限制保留，不新增補彈預觸發。
-- R／選單鍵、失焦或顯示游標時暫停動作；回到操作狀態並放開按鍵後自動恢復。
-- 暫停會取消尚未執行的 pending，避免回來後突然觸發。
-- 扳機達 55% 行程視為按下，25% 以下釋放；重新接管時需回到 10% 以下。
-- 原版 Aim 保留，滑鼠與手柄共用動作鎖。
+| PC 輸入 | C4 動作 |
+| --- | --- |
+| 滑鼠左鍵 | 投擲 |
+| 滑鼠右鍵 | 引爆 |
 
-## 相容範圍與驗證
+拿出 C4 引爆器後，先放開滑鼠左右鍵再按下。無須 F6；長按不連發，同時按兩鍵時以引爆優先。R 維持遊戲原本補彈流程。補彈、選單、顯示游標或失焦時暫停自訂動作，恢復後先放開按鍵再重新按下。F7 可寫入診斷標記。
 
-**已測遊戲 build：`24826606`。** 模組會核對遊戲模組雜湊與原生函式指紋，其他 build 需重新驗證。
+模組沿用遊戲原生 C4 動作生命週期，不直接建立炸藥或爆炸。原版瞄準行為保留；切換其他武器或暫停時，會恢復原本的武器輸入。
 
-使用者已回報滑鼠、Xbox 及自動版本正常。最新一輪記錄 **31 次投擲、52 次引爆**，全部觀察到原生動作完成，沒有 action fault 或功能停用事件。
+## 相容性與驗證
 
-PS profile 已有離線測試，**尚無 PS 硬體實測**。相容性取決於遊戲暴露的手柄介面，不代表所有型號、USB／藍牙組合都已測過。多人、完整移動／受擊中斷與所有選單尚未全面驗收；沒有游標的 UI 仍需個別確認。詳見 [驗證紀錄](docs/VALIDATION.md)。
+0.7.0 以 Steam 遊戲 build **`25480438`** 為目標，啟動與每次動作前會核對 `game.dll` 雜湊及 28 處程式指紋。已在實際任務中以**唯讀方式**確認本機 C4 身份、兩種射擊模式、資源與動作准入狀態；PC 輸入經離線測試。**此新安裝包尚未在遊戲中實際執行投擲／引爆。** 動畫、畫面效果、多人與特殊 UI／移動狀態仍待實機驗收。
 
-## 開源內容
+舊 0.6.x 實機記錄對應 build `24826606`，不能作為 0.7.0 的實機通過證據。詳見 [驗證紀錄](docs/VALIDATION.md)。歷史手柄版本仍保留於 repository，本版不提供手柄路由。
 
-完整 Lua 程式、組裝與打包腳本、測試、原生版型核對資料、歷史研究筆記及去識別化日誌均收錄於本專案，採 [MIT 授權](LICENSE)。第三方依賴另列於 [THIRD_PARTY.md](THIRD_PARTY.md)。
+## 從原始碼建置
+
+需 Python 3.10+ 與 LuaJIT 2.1：
 
 ```bash
-python -B scripts/check_automatic.py
-python -B scripts/build.py --loader /path/to/BingusSharedLoader
+python -B scripts/check_pc.py
+python -B scripts/build.py --loader /path/to/BingusSharedLoader-v18
 ```
 
-需要 Python 3.10+ 與 LuaJIT；詳見 [建置方法](docs/BUILDING.md)、[架構說明](docs/ARCHITECTURE.md)、[研究索引](research/README.md)。
+打包工具版本鎖定於 [dependencies.lock.json](dependencies.lock.json)。詳見 [建置方法](docs/BUILDING.md)、[架構](docs/ARCHITECTURE.md) 與 [研究索引](research/README.md)。專案原創程式與文件採 [MIT 授權](LICENSE)；第三方來源見 [THIRD_PARTY.md](THIRD_PARTY.md)。研究、程式與文件有 AI 協助，實機唯讀觀察與模擬檢查會分開標示。
 
-公開安裝包沿用已測成功的 EXP06 Lua 內容。內部 `EXP06`、`C4DualInput` 與 `c4_boundary_probe` 名稱保留以延續升級與日誌比對，Mod Manager 顯示名稱為 **HD2 C4 Quick Actions**。
-
-研究、程式、測試與文件有 AI 協助；文件會區分 mock 檢查、實機記錄與使用者回報。
+此 repository 保留 [etxp/HD2-C4-Quick-Actions](https://github.com/etxp/HD2-C4-Quick-Actions) 先前的 Git 歷史；此處的 0.7.0 PC 專用版為獨立保存的版本。

@@ -85,7 +85,7 @@ end''')
     source=replace_once(source,"print('[C4BoundaryProbe] F6 toggles capture; F7 marks a moment. Log: '..M.log_name)",
         "print('[C4 Dual Input EXP04] F6 enables/disables; RMB Deploy; LMB Detonate; F7 marker. Log: '..M.log_name)")
     result=header+'\n'+''.join(modules)+source
-    (ROOT/'src/c4_dual_input.lua').write_text(result)
+    (ROOT/'src/c4_dual_input.lua').write_text(result,newline='\n')
     return hashlib.sha256(result.encode()).hexdigest()
 
 if __name__=='__main__':print(assemble())

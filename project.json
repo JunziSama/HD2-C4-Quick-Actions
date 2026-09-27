@@ -1,11 +1,12 @@
 {
   "name": "HD2 C4 Quick Actions",
-  "version": "0.6.0",
-  "runtime_version": "0.6.0-exp06",
-  "game_build": "24826606",
-  "source": "src/c4_dual_input_auto.lua",
-  "tested_source_sha256": "4134de7cb71ff39a738c13122dc23fe1ec09535397d1e455efb7ab5f687cdb40",
-  "package": "dist/HD2-C4-Quick-Actions-v0.6.0.zip",
+  "version": "0.7.0",
+  "runtime_version": "0.7.0-exp07",
+  "game_build": "25480438",
+  "source": "src/c4_pc_auto.lua",
+  "test_report": "evidence/pc-offline-tests.json",
+  "tested_source_sha256": "1b66e295055004c3755e8595dfd13533e0cfc8a462b8acc8396f197bd6319f5b",
+  "package": "dist/HD2-C4-Quick-Actions-v0.7.0-PC.zip",
   "license": "MIT",
-  "description": "Independent C4 deployment and detonation controls for mouse and controller. Automatic activation; no F6 required. Requires Bingus Shared Loader v15+ / API 1. Tested on build 24826606."
+  "description": "PC mouse and keyboard only: C4 left-click Deploy, right-click Detonate. Automatic activation. Requires Bingus Shared Loader v18 / API 1. Static and read-only context checks on game build 25480438; native actions await gameplay verification."
 }

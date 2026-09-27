@@ -19,8 +19,8 @@ def main():
     args=parser.parse_args()
     project=json.loads((ROOT/'project.json').read_text())
     lock=json.loads((ROOT/'dependencies.lock.json').read_text())
-    tests=json.loads((ROOT/'evidence/automatic-offline-tests.json').read_text())
-    assert tests['exit_code']==0,'run scripts/check_automatic.py first'
+    tests=json.loads((ROOT/project.get('test_report','evidence/automatic-offline-tests.json')).read_text())
+    assert tests['exit_code']==0,'run the current source check first'
     for name,expected in tests['files'].items():
         assert sha((ROOT/name).read_bytes())==expected,'tested input changed: '+name
     source=ROOT/project['source'];source_bytes=source.read_bytes()
@@ -61,10 +61,13 @@ def main():
     report=dict(project=project['name'],version=project['version'],package=project['package'],
         sha256=sha(target.read_bytes()),bytes=target.stat().st_size,
         entries={name:sha(data) for name,data in content.items()},source_sha256=sha(source_bytes),
-        plaintext_matches_tested_source=True,native_behavior_changes=False,
+        plaintext_matches_tested_source=True,native_action_sequence_unchanged=True,
+        native_layout_ported=project['version']=='0.7.0',
+        controller_support=project['version']!='0.7.0',
+        native_actions_live_tested=False,
         resources=1,loader_included=False,installed=False,game_executed_by_build=False)
-    (ROOT/'evidence/public-package.json').write_text(json.dumps(report,indent=2)+'\n')
-    (target.parent/'SHA256SUMS.txt').write_text(report['sha256']+'  '+target.name+'\n')
+    (ROOT/'evidence/public-package.json').write_text(json.dumps(report,indent=2)+'\n',newline='\n')
+    (target.parent/'SHA256SUMS.txt').write_text(report['sha256']+'  '+target.name+'\n',newline='\n')
     print(json.dumps(report,indent=2))
 
 if __name__=='__main__':main()

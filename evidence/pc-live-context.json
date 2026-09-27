@@ -1,0 +1,39 @@
+{
+  "evidence_kind": "READ_ONLY_LIVE_GAME_CONTEXT",
+  "game_build": "25480438",
+  "module_sha256": "2e2c3b7c2500646dadd5f2b4c6e0504dbb7e7896139f64cddc0d1813c718f51e",
+  "date_local": "2026-09-27",
+  "native_signatures_checked": 28,
+  "native_signatures_matched": 28,
+  "process_reads_only": true,
+  "new_mod_installed_or_replaced": false,
+  "native_action_calls": 0,
+  "memory_writes": 0,
+  "observations": [
+    {
+      "context": "equipped_local_c4",
+      "selected_mode": "DEPLOY",
+      "ability_template_present": true,
+      "action_context_validated": true,
+      "action_gate": "READY",
+      "weapon_driver_flags": "00002148",
+      "ammo_path": "weapon_rounds",
+      "rounds_chamber_token": 55,
+      "deploy_ammo_ready": true,
+      "native_action_active": false
+    },
+    {
+      "context": "equipped_local_c4",
+      "selected_mode": "DETONATE",
+      "ability_template_present": true,
+      "action_context_validated": true,
+      "action_gate": "READY",
+      "weapon_driver_flags": "00002148",
+      "ammo_path": "weapon_rounds",
+      "rounds_chamber_token": 0,
+      "deploy_ammo_ready": false,
+      "native_action_active": false
+    }
+  ],
+  "scope": "Source code identity, memory layout and read-only action admission; no native action execution or visual outcome verification."
+}

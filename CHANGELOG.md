@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.0 — 2026-09-27
+
+- Port the PC mouse/keyboard runtime to Helldivers 2 Steam build 25480438. Left click Deploys C4; right click Detonates. Remove controller input from the current runtime, while retaining older versions as historical files.
+- Recheck the C4 native action entry points, module hash, 28 code signatures, component layouts and Fire flag. Read-only live mission checks accepted the equipped C4 in both selected modes.
+- Build with Bingus Shared Loader v18. This package's actual Deploy/Detonate results in game remain unverified; the older 0.6.x gameplay record is for build 24826606.
+
+## 0.6.1 — 2026-09-22
+
+- Swap the automatic version's mouse controls: LMB Deploy, RMB Detonate.
+- Keep Xbox LT/RT and PlayStation L2/R2 controls unchanged.
+- Validate the new mapping offline; gameplay verification remains pending.
+
 ## 0.6.0 — 2026-09-20
 
 First public package named **HD2 C4 Quick Actions**, preserving the tested EXP06 runtime.

@@ -1,8 +1,22 @@
 # Validation record
 
-## Current public package
+## Current 0.7.0 PC port
 
-Version **0.6.0**, based on the user-tested runtime **0.6.0-exp06**, game build **24826606**. The public packaging changes its display name and documentation, while retaining these exact runtime bytes:
+Version **0.7.0** targets Steam build **25480438** and accepts only PC mouse/keyboard input: LMB Deploy, RMB Detonate. The gamepad input module is absent from the generated runtime. The prior 0.6.1 source and ZIP remain as historical outputs.
+
+The current local `game.dll` disk SHA-256 is `2e2c3b7c2500646dadd5f2b4c6e0504dbb7e7896139f64cddc0d1813c718f51e`. All **28** selected native signatures in [pc-layout.json](../evidence/pc-layout.json) matched the loaded game module. Native action entry points and the C4 Fire bit were mapped through old/new code comparison; the new live C4 flags were observed as `0x2148`.
+
+Read-only evaluation of the **ported Lua context and action readers** during a local mission accepted the equipped C4 in both selected modes. In Deploy mode it found the C4 resource, ability template, rounds configuration, chamber token 55 and `action_gate=READY`. In Detonate mode it found the same C4 identity, chamber token 0, `deploy_ammo_ready=false` and `action_gate=READY`. The latter is expected: Detonate must not require Deploy ammo. The [sanitized observation](../evidence/pc-live-context.json) contains no pointers, entity IDs or game paths. These checks did not install the new Mod, call native action functions, change game memory or verify visual Deploy/Detonate effects.
+
+`python -B scripts/check_pc.py` runs PC input edge tests at 30/60/144 Hz, simultaneous-button priority, reload/UI release baselines, other-weapon routing, controller absence and Lua syntax. Its [machine-readable result](../evidence/pc-offline-tests.json) records the source and input hashes. The [package report](../evidence/public-package.json) verifies that the ZIP's Lua bytes match this tested source. **Actual 0.7.0 Deploy/Detonate gameplay is still unverified.**
+
+## Local 0.6.1 package
+
+Version **0.6.1** swaps only the automatic runtime's mouse inputs: LMB Deploy and RMB Detonate. Xbox LT/RT and PlayStation L2/R2 remain unchanged. The new mapping is covered by synthetic-memory and mock-native checks. It has not yet been verified in game; the package build does not run the game.
+
+## Earlier 0.6.0 gameplay record
+
+Version **0.6.0**, based on the user-tested runtime **0.6.0-exp06**, game build **24826606**. That package changed its display name and documentation while retaining these exact runtime bytes:
 
 `4134de7cb71ff39a738c13122dc23fe1ec09535397d1e455efb7ab5f687cdb40`
 
@@ -38,16 +52,16 @@ Sanitization preserves event order and diagnostic/action fields while removing s
 
 ## Offline checks
 
-Run `python -B scripts/check_automatic.py`. The public checkout runs the same **159 checks**, covering automatic activation, empty→supply→reload recovery, held controls, mouse/Xbox/PS profiles, both firing modes at simulated 30/60/144 Hz, pending cancellation, native gates, restoration, callback/log failures, rolling logs and collection.
+The historical `python -B scripts/check_automatic.py` suite checks automatic activation, empty→supply→reload recovery, held controls, mouse/Xbox/PS profiles, both firing modes at simulated 30/60/144 Hz, pending cancellation, native gates, restoration, callback/log failures, rolling logs and collection for 0.6.1.
 
 These are synthetic-memory/mock-native checks, not game execution. The [machine-readable result](../evidence/automatic-offline-tests.json) includes commands, outputs and input hashes. The [package report](../evidence/public-package.json) checks archive contents and exact source bytes.
 
 ## Remaining scope
 
-- PlayStation hardware, all controller models and all connection methods.
 - Multiplayer host/client and latency scenarios.
 - Full sprint/dive/vault/stagger/death interruption matrix.
 - Every menu/chat/overlay state, especially those without a visible cursor.
 - Builds other than the tested game module.
+- Actual Deploy and Detonate calls and visual effects in 0.7.0 gameplay.
 
 Historical notes retain the conclusions known at each stage and may say “pending” for a case later tested. This document is the current release status.

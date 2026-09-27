@@ -1,12 +1,12 @@
 {
   "loader": {
-    "commit": "836427cef78b8a67cf771c1f16291d93be921744",
-    "release": "v15",
-    "internal_version": 16,
+    "commit": "3d7e3a120828178573ef1ee0a5c7eeae4a951865",
+    "release": "v18",
+    "internal_version": 17,
     "api": 1,
     "files": {
       "scripts/build_addon.py": "a4e5aefb58152b8380c504f154bceb242a1b0b0ba8d6266f249409012896cbee",
-      "scripts/archive.py": "1da94db4352340246ae99515638784f0653839f26fc77b7405a9bb39d834f9c2"
+      "scripts/archive.py": "564dda73591088ced78be67fdae0c85df4eb1d82d6371cd16224ce7d90b25a12"
     },
     "repository": "https://github.com/CowboyBingus/BingusSharedLoader.git"
   },

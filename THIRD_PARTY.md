@@ -4,7 +4,7 @@ The project's MIT license covers project-authored code and documentation. It doe
 
 ## Runtime and packaging dependency
 
-- [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader), by CowboyBingus. Runtime contract: v15+ / API 1. The packaging helper is pinned to commit `836427cef78b8a67cf771c1f16291d93be921744`; its two Python files are checked against [locked hashes](dependencies.lock.json). The helper is invoked from a separately obtained checkout and is not copied into this repository. See its [authoring contract](https://github.com/CowboyBingus/BingusSharedLoader/blob/836427cef78b8a67cf771c1f16291d93be921744/docs/AUTHORING.md).
+- [Bingus Shared Loader v18](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/v18), by CowboyBingus. Runtime contract: API 1. The packaging helper is pinned to commit `3d7e3a120828178573ef1ee0a5c7eeae4a951865`; its two Python files are checked against [locked hashes](dependencies.lock.json). The helper is invoked from a separately obtained checkout and is not copied into this repository. See its [authoring contract](https://github.com/CowboyBingus/BingusSharedLoader/blob/3d7e3a120828178573ef1ee0a5c7eeae4a951865/docs/AUTHORING.md).
 
 ## Research references
 

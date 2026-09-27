@@ -41,7 +41,7 @@ def assemble():
         "mouse_mapping='RMB_DEPLOY_LMB_DETONATE',gamepad_mapping='LT_L2_DEPLOY_RT_R2_DETONATE'")
     source=replace_once(source,"[C4 Dual Input EXP04] F6 enables/disables; RMB Deploy; LMB Detonate; F7 marker. Log: ",
         "[C4 Dual Input EXP05] F6 enable/disable; RMB/LT/L2 Deploy; LMB/RT/R2 Detonate; F7 marker. Log: ")
-    (ROOT/'src/c4_dual_input_gamepad.lua').write_text(source)
+    (ROOT/'src/c4_dual_input_gamepad.lua').write_text(source,newline='\n')
     return hashlib.sha256(source.encode()).hexdigest()
 
 if __name__=='__main__':print(assemble())

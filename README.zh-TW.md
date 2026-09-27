@@ -2,7 +2,7 @@
 
 # HD2 C4 Quick Actions
 
-[English](README.md)
+[简体中文](README.md) · [English](README.en.md)
 
 《絕地戰兵 2》C4 的 **PC 滑鼠鍵盤版**：手持 C4 引爆器時，**滑鼠左鍵投擲，右鍵引爆**。拿出 C4 後自動啟用，不受遊戲目前選擇的 C4 射擊模式影響；其他武器維持原本滑鼠操作。0.7.1 不讀取手柄輸入。
 

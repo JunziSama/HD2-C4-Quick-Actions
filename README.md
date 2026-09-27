@@ -1,47 +1,51 @@
-![HD2 C4 Quick Actions — C4 gameplay cover](assets/cover.png)
+![HD2 C4 Quick Actions — C4 游戏画面封面](assets/cover.png)
 
 # HD2 C4 Quick Actions
 
-[繁體中文](README.zh-TW.md)
+[English](README.en.md) · [繁體中文](README.zh-TW.md)
 
-PC mouse and keyboard controls for C4 in **Helldivers 2**. While holding the C4 detonator, **left click deploys** and **right click detonates**. The controls activate automatically and work independently of the selected C4 firing mode. Other weapons retain their original mouse behavior. Version 0.7.1 has no controller input route.
+《绝地潜兵 2》C4 的 **PC 鼠标键盘 Mod**：手持 C4 引爆器时，**左键丢出 C4，右键引爆 C4**。装备 C4 后自动启用，不受游戏当前选择的 C4 射击模式影响；其他武器保持原本的鼠标操作。当前 0.7.1 版不读取手柄输入。
 
-## Install
+## 安装
 
-1. Close the game. Install [Bingus Shared Loader v18](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/v18) separately.
-2. Import [HD2-C4-Quick-Actions-v0.7.1-PC.zip](dist/HD2-C4-Quick-Actions-v0.7.1-PC.zip) into your mod manager, enable it and the loader, then deploy.
-3. Disable earlier C4 Quick Actions packages; keep one version enabled.
+1. 退出游戏，单独安装 [Bingus Shared Loader v18](https://github.com/CowboyBingus/BingusSharedLoader/releases/tag/v18)。
+2. 将 [HD2-C4-Quick-Actions-v0.7.1-PC.zip](dist/HD2-C4-Quick-Actions-v0.7.1-PC.zip) 导入 Mod Manager，启用本 Mod 和 Loader，然后部署。
+3. 停用旧版 C4 Quick Actions，同一时间只启用一个版本。
 
-The ZIP in `dist/` is the installable mod. A GitHub source-code ZIP is the development repository. To remove the mod, disable it and redeploy in your manager. The package is created locally; building it does not change the game's files.
+`dist/` 中的 ZIP 是可导入的 Mod 安装包；GitHub 的 Source code ZIP 是项目源码。要移除 Mod，请在 Mod Manager 中停用并重新部署。构建安装包只会在本地生成文件，不会自动修改游戏目录。
 
-## Controls and behavior
+## 操作与行为
 
-| PC input | C4 action |
+| PC 输入 | C4 动作 |
 | --- | --- |
-| Left mouse button | Deploy |
-| Right mouse button | Detonate |
+| 鼠标左键 | 丢出 C4 |
+| 鼠标右键 | 引爆 C4 |
 
-Equip the C4 detonator and release both mouse buttons before the first action. F6 is not required. Holding a button does not repeatedly request an action; simultaneous presses prioritize Detonate. If a right click meets a transient avatar-scope veto, its Detonate request may wait up to 200 ms for the same C4 to become eligible. Releasing the button does not cancel this brief retry. R retains the game's reload timing. Reload, menus, visible UI cursors and focus loss cancel it and pause custom input. Release both buttons before pressing again. F7 adds an optional log marker.
+手持 C4 引爆器后，先松开鼠标左右键，再按下要使用的按键。无需 F6；长按不会连续触发，同时按下左右键时优先引爆。如果右键短按恰好遇到短暂的角色状态拦截，Mod 会在最多 200 毫秒内重新检查同一把 C4 是否可执行引爆；松开右键不会取消这次短暂等待。
 
-The mod calls the game's original action lifecycle; it does not directly spawn charges or explosions. Original Aim behavior remains. Its C4-only Fire gate restores normal weapon input when switching weapons or pausing.
+R 键保留游戏原本的补弹行为。补弹、打开菜单、显示界面光标或游戏失焦会取消等待并暂停自定义输入；恢复后需要先松开鼠标键再重新按下。F7 可写入诊断日志标记。
 
-## Compatibility and validation
+Mod 沿用游戏原生的 C4 动作流程，不直接生成炸药或爆炸。右键原本的瞄准行为保留；切换其他武器或暂停时，会恢复游戏原本的武器输入。
 
-Version 0.7.1 targets Steam game build **`25480438`**. The runtime checks the `game.dll` disk hash and 28 native code signatures before taking control and before action calls. The tester reported that 0.7.0 could Deploy and Detonate in game, but some short right clicks failed. Its local log confirms native action starts and transient avatar-scope rejections. The 0.7.1 short-click fix passed offline tests but **has not yet been tested in game**. Multiplayer and edge-case UI/movement behavior remain unverified.
+## 兼容性与验证
 
-Earlier 0.6.x gameplay results refer to build `24826606`. See the [validation record](docs/VALIDATION.md) for the evidence boundary. Historical controller code and packages remain in the repository, but this release does not read controller inputs.
+0.7.1 针对 Steam 游戏版本 **`25480438`**。运行时在接管 C4 和调用动作前，会核对 `game.dll` 的哈希及 28 处原生代码指纹。
 
-## Build from source
+测试者反馈 0.7.0 在游戏中可以丢出和引爆 C4，但部分右键短按未触发。该次本地日志确认原生动作曾启动，也记录到短暂的角色状态拦截。0.7.1 的短按修复已通过离线检查，**尚未在游戏中验证**。多人游戏及特殊界面、移动状态仍需测试。
 
-Use Python 3.10+ and LuaJIT 2.1:
+更早的 0.6.x 实机记录对应游戏版本 `24826606`。验证范围详见[验证记录](docs/VALIDATION.md)。仓库保留了历史手柄代码和安装包，但当前版本不读取手柄输入。
+
+## 从源码构建
+
+需要 Python 3.10+ 和 LuaJIT 2.1：
 
 ```bash
 python -B scripts/check_pc.py
 python -B scripts/build.py --loader /path/to/BingusSharedLoader-v18
 ```
 
-The packaging helper is pinned in [dependencies.lock.json](dependencies.lock.json). See [building](docs/BUILDING.md), [architecture](docs/ARCHITECTURE.md) and [research](research/README.md).
+打包工具版本固定在 [dependencies.lock.json](dependencies.lock.json)。详见[构建说明](docs/BUILDING.md)、[架构说明](docs/ARCHITECTURE.md)和[研究资料](research/README.md)。
 
-Project-authored code and documentation use the [MIT License](LICENSE). External dependencies and game material retain their own terms; see [third-party references](THIRD_PARTY.md). Research, implementation and documentation involved AI assistance; live observations and simulated checks are identified separately.
+项目原创代码和文档采用 [MIT 许可证](LICENSE)；外部依赖与游戏素材仍适用各自的条款，详见[第三方说明](THIRD_PARTY.md)。研究、实现和文档曾使用 AI 辅助；实机观察与模拟检查在验证记录中分别标明。
 
-This repository preserves the earlier Git history of [etxp/HD2-C4-Quick-Actions](https://github.com/etxp/HD2-C4-Quick-Actions). This PC-only line is a separate continuation of that work.
+本仓库保留了 [etxp/HD2-C4-Quick-Actions](https://github.com/etxp/HD2-C4-Quick-Actions) 早期的 Git 历史；这里的 PC 专用版本是该工作的独立后续版本。

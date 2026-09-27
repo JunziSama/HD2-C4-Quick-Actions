@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the PC-only 0.7.0 source and record reproducible input hashes."""
+"""Validate the PC-only 0.7.1 source and record reproducible input hashes."""
 import hashlib
 import json
 import re
@@ -21,7 +21,7 @@ def main():
     assert source_hash==project['tested_source_sha256']
     assert layout['module_sha256'] in source
     assert len(layout['signatures'])>=25
-    assert "version='0.7.0-exp07'" in source
+    assert "version='0.7.1-exp07'" in source
     assert 'GamepadInput' not in source and 'engine.Pad' not in source
     assert 'pad.sample' not in source and 'gamepad_mapping' not in source
     assert "deploy_key='LMB', detonate_key='RMB'" in source
@@ -33,7 +33,9 @@ def main():
         assert not re.search(pattern,source),pattern
     calls=re.findall(r"ffi\.cast\('[^'\n]*\(\*\)[^'\n]*',game\+(0x[0-9a-f]+)\)",source)
     assert calls==['0x7caf40','0x744690','0x742900','0x7533c0'],calls
+    assert "deadline_ms=200" in source and 'scope_grace_started' in source
     commands=[['luajit','tests/test_pc.lua'],
+              ['luajit','tests/test_pc_grace.lua'],
               ['luajit','-e',"assert(loadfile('src/c4_pc_auto.lua')); print('PASS PC runtime Lua syntax')"]]
     runs=[]
     for command in commands:
@@ -42,7 +44,7 @@ def main():
         runs.append(dict(command=command,exit_code=run.returncode,
                          stdout=run.stdout,stderr=run.stderr))
     files={str(p.relative_to(ROOT)) for directory,pattern in
-           [('src','*.lua'),('scripts','*.py'),('tests','test_pc.lua'),
+           [('src','*.lua'),('scripts','*.py'),('tests','test_pc*.lua'),
             ('evidence','*-layout.json')] for p in (ROOT/directory).glob(pattern)}
     files.update({'dependencies.lock.json','project.json','docs/INSTALL.txt','LICENSE'})
     report=dict(evidence_kind='PC_INPUT_MOCK_AND_STATIC',version=project['version'],

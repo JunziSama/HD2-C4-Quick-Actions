@@ -10,12 +10,15 @@ from assemble_context import replace_once
 def assemble():
     assemble_automatic()
     source=(ROOT/'src/c4_dual_input_auto.lua').read_text()
-    source=replace_once(source,"version='0.6.1-exp06'","version='0.7.0-exp07'")
+    source=replace_once(source,"version='0.6.1-exp06'","version='0.7.1-exp07'")
     source=replace_once(source,
         '-- EXP06: automatic C4 mouse/gamepad routing; temporary reload/UI/focus pauses.',
         '-- EXP07: automatic PC mouse/keyboard C4 routing; temporary reload/UI/focus pauses.')
     module='local GamepadInput=(function()\n'+(ROOT/'src/gamepad_input.lua').read_text()+'\nend)()\n'
     source=replace_once(source,module,'')
+    old='local ActionController=(function()\n'+(ROOT/'src/action_controller.lua').read_text()+'\nend)()\n'
+    new='local ActionController=(function()\n'+(ROOT/'src/pc_action_controller.lua').read_text()+'\nend)()\n'
+    source=replace_once(source,old,new)
     source=replace_once(source,
         'local file,actions,focus,gate,router,cancel_keys,gamepad,input_guard,gameplay_guard\nlocal last_pad_available=true',
         'local file,actions,focus,gate,router,cancel_keys,input_guard,gameplay_guard')

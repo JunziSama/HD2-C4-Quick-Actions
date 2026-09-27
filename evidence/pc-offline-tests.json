@@ -1,10 +1,10 @@
 {
   "evidence_kind": "PC_INPUT_MOCK_AND_STATIC",
-  "version": "0.7.0",
-  "source_sha256": "1b66e295055004c3755e8595dfd13533e0cfc8a462b8acc8396f197bd6319f5b",
+  "version": "0.7.1",
+  "source_sha256": "959d624c02eec9d76b1f22f86ec12e21286567eb2b729d6906399a527edf4b5f",
   "layout_sha256": "2b4b508358dbaeca379764fdc901436067ce117fac7e132ebee31814937b2754",
   "exit_code": 0,
-  "passed": 8,
+  "passed": 21,
   "runs": [
     {
       "command": [
@@ -13,6 +13,15 @@
       ],
       "exit_code": 0,
       "stdout": "PASS mouse edges and holds at 30 Hz\nPASS mouse edges and holds at 60 Hz\nPASS mouse edges and holds at 144 Hz\nPASS simultaneous mouse buttons prioritize Detonate\nPASS reload and UI require released baseline\nPASS other weapon has no C4 action route\nPASS assembled PC runtime has no controller input source\nPC input tests:\t7\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "luajit",
+        "tests/test_pc_grace.lua"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS RMB tap survives 50 ms transient scope veto\nPASS RMB tap survives 100 ms transient scope veto\nPASS RMB tap survives 200 ms transient scope veto\nPASS scope veto beyond 200 ms expires without later detonation\nPASS repeated RMB edge coalesces while grace is waiting\nPASS brief scope veto during Deploy transfers to original one-slot queue\nPASS queued Detonate keeps its original 1.5-second deadline\nPASS grace cancels on pause\nPASS grace cancels on weapon\nPASS grace cancels on native_block\nPASS grace cancels on fire_held\nPASS grace cancels on new_deploy\nPASS left click and other weapons never use the RMB grace\nPC grace tests:\t13\n",
       "stderr": ""
     },
     {
@@ -41,20 +50,20 @@
   "files": {
     "LICENSE": "75916765aba21fe3eca11a855d0182969f99f1ff0b00f5f91df0270fdd7f0369",
     "dependencies.lock.json": "b0d4f8a3f3aff9364b17afd3ebd996e5a946c775311e8942ae5f112f8bf20033",
-    "docs/INSTALL.txt": "3ca86415e807df5108b899b38f3826cb4ea74b8121652e543ed037e6a803d5aa",
+    "docs/INSTALL.txt": "e2b04c008b197b3b71517a9b4479bfa2d350989b5ec3253bfadc03f0586535ec",
     "evidence\\action-layout.json": "7c3ffde4a8e827cc3ac26ffec57dc1a781c86f4f7781fa0059ddc76b2fd16574",
     "evidence\\context-layout.json": "ec664fdd88404ac1afacb571c3d3bc2c804641cbb022376308cd41f37d079049",
     "evidence\\mouse-layout.json": "ffe419835e535e634d6008fcd7a53198712a8509c704be1adcc8ee11a87af5aa",
     "evidence\\pc-layout.json": "2b4b508358dbaeca379764fdc901436067ce117fac7e132ebee31814937b2754",
-    "project.json": "05772d08f4fc082659c3af2f01b31dce5ccdc281edb201c8fa9e1c3372b73091",
+    "project.json": "0c99746d5b181b109826cbb0eb5d3a8bd0262d27a9634e1da4ab952cb9675029",
     "scripts\\assemble_automatic.py": "eb8345c428e0df996497557a8f9f2353afc417439587e240422f8138ced76ca0",
     "scripts\\assemble_context.py": "b775b495e7a54d72291eaee3bfd9d067faf78b0f9284a37d649de11e408394da",
     "scripts\\assemble_gamepad.py": "3c7740b4da83ed6c3b4bb7b5435f2b23a06f09b2338858e32db910b8564a029f",
     "scripts\\assemble_mouse.py": "5e975a22cb6efcd79e077fe53d409aa2e08233184e705557521f9075969f69f2",
-    "scripts\\assemble_pc.py": "b6d5c9f3016d59363079b461a723f33581702f9cdef31698d0cc8cae9eaeb3ef",
-    "scripts\\build.py": "c477a16e1533dfac2895fc156e86b08014e0f471762cebb5bd5b060bbd255609",
+    "scripts\\assemble_pc.py": "ba4e316e1023ff79c65e2c634e55fd9e31b96b25c1ac384dbde885b9685b27e0",
+    "scripts\\build.py": "9cd23c923679a714ae15c8732a8fee9f54da553a7bd009c70f45bed0aaac0b41",
     "scripts\\check_automatic.py": "7aa4cfb98a04b7262cf7ebc3f50d9a021d00235ab3eb0c074e03928b84336789",
-    "scripts\\check_pc.py": "5fbc99cbaca51dd9bae038a45ea323b8ffb3ab0ced2bee840890e6a7d2cdc9db",
+    "scripts\\check_pc.py": "60923988bd07008488bff242687e1b3cb2292279bf034fa66c543ac9acc73706",
     "scripts\\collect_actions.py": "8376a3be41d889d07f22ca2e47ac0c160e8f4a81fcea1461c2d97f6410d5fe58",
     "src\\action_backend.lua": "aec3f37d88503a0555be23d751f9740553894a0793a172927da11fbe5c0089af",
     "src\\action_controller.lua": "f7cb88f704f38d636468ae4296d25542eb6bb89ced648a57e3abf3524a2820f8",
@@ -65,7 +74,7 @@
     "src\\c4_dual_input.lua": "8dc29dba6ba6193ff1a7c45f73b87e29996bcfb2a2a317d9f95fec7be729d243",
     "src\\c4_dual_input_auto.lua": "775d050a9ca3b68247615a7548fb15439521ed78479c5402e6909828b4b88f43",
     "src\\c4_dual_input_gamepad.lua": "a3c6a4d5fde616e619fdd9eefdee8adf76340896a71b61377bee31b62253d17b",
-    "src\\c4_pc_auto.lua": "1b66e295055004c3755e8595dfd13533e0cfc8a462b8acc8396f197bd6319f5b",
+    "src\\c4_pc_auto.lua": "959d624c02eec9d76b1f22f86ec12e21286567eb2b729d6906399a527edf4b5f",
     "src\\c4_probe.lua": "f7f1e5efc2f1a7c4a6f95aac2d35110ffae6024ae34297bd19f05a126ab8565b",
     "src\\context_reader.lua": "6fd657bd614e30b7389f2aca69c48f2798f5afe862e0310f0089b26ca41512be",
     "src\\context_runtime.lua": "91dc43332f4f007b2ef919c47e7ff826b2af210435ed3317ad25a77cbd825ae3",
@@ -77,11 +86,13 @@
     "src\\mouse_router.lua": "52ae4ad0ec5344a188d826adaa5fd0b7b1f0c88fb7211aa1b7b33055ebe14925",
     "src\\mouse_tick.lua": "7606a809f57d270df314577d43ebfb390ce0ea4588df66eaf530789cb956ae9e",
     "src\\native_actions_windows.lua": "3d21840008b460885bb827fa7b07f72c79ee0531aea6688b45d6f1e616a1b385",
+    "src\\pc_action_controller.lua": "04242ceaa1b45291edff215f31a4c4a4f0fb1a4874dfaeb9bba1fcc89f9d2623",
     "src\\pc_tick.lua": "d81e146b8ccc4eec251813b706839e1512e77b77a4e1a0e26014ad88072ba11f",
     "src\\read_only_windows.lua": "1e22d81254f5a388fad9177a9cde1d1e16a0ca63a4c7abb5af7008021e77e944",
     "src\\rolling_log.lua": "0381c861e7acd10523120973eb505b84cb6165ba3ea734f9d9b7b3e6983f4199",
     "src\\weapon_fire_gate.lua": "e429afaa2f9bec32fedf39a6835a522eab4da31cd2811e05928a6d8722b3122c",
     "src\\window_focus.lua": "bf88edc83fccbdc55ac1f4332afccb1f94fa761f5eebd4496e469371b836f317",
-    "tests\\test_pc.lua": "d0be9e54ea454f6e7b8bbbf885aa93fb7aecd26c8e9ec90cde5e81e97f9698e3"
+    "tests\\test_pc.lua": "d0be9e54ea454f6e7b8bbbf885aa93fb7aecd26c8e9ec90cde5e81e97f9698e3",
+    "tests\\test_pc_grace.lua": "5d461561e78288fa4375b1af42ec6560e71925f1f471f85128b41da0bff0be70"
   }
 }

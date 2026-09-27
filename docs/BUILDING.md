@@ -26,12 +26,12 @@ python -B scripts/build.py --loader vendor/BingusSharedLoader
 
 An existing checkout at any location can be passed with `--loader`. The script checks both helper-file hashes in `dependencies.lock.json` before execution. `vendor/` is ignored by Git and is not part of this source distribution.
 
-The result is `dist/HD2-C4-Quick-Actions-v0.7.0-PC.zip`, plus its SHA-256 checksum and `evidence/public-package.json`. The package contains one Lua addon, manifest, installation text and MIT license; the loader runtime is separate. The archive parser independently checks that its embedded Lua bytes exactly match the tested source. No files are installed into the game.
+The result is `dist/HD2-C4-Quick-Actions-v0.7.1-PC.zip`, plus its SHA-256 checksum and `evidence/public-package.json`. The package contains one Lua addon, manifest, installation text and MIT license; the loader runtime is separate. The archive parser independently checks that its embedded Lua bytes exactly match the tested source. No files are installed into the game.
 
 ## Source layout
 
 - `src/c4_pc_auto.lua`: generated current PC-only runtime; `src/c4_dual_input_auto.lua` remains the historical 0.6.1 runtime.
-- `src/*_reader.lua`, `action_backend.lua`, `action_controller.lua`: context, eligibility and original action calls.
+- `src/*_reader.lua`, `action_backend.lua`, `pc_action_controller.lua`: context, eligibility, PC-only short RMB retry and original action calls. `action_controller.lua` remains the historical controller.
 - `src/weapon_fire_gate.lua`, `fire_gate_windows.lua`: scoped native Fire ownership and restoration.
 - `src/pc_tick.lua`, `mouse_router.lua`, `input_guard.lua`, `gameplay_guard.lua`: current PC input and pause/resume. `gamepad_input.lua` and `automatic_tick.lua` remain for history only.
 - `scripts/assemble_pc.py`: current PC assembly and build 25480438 adaptation. Earlier staged assemblers remain for historical payloads and regressions.

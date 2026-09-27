@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 — 2026-09-28
+
+- Keep an RMB Detonate press for at most 200 ms when only the conservative avatar-scope check transiently blocks it. Recheck the same C4 and native action state before calling the game; preserve the original Aim behavior.
+- Preserve the press time when a recovered request moves behind an active Deploy in the existing one-slot queue. Focus, UI, reload, weapon change, native blockers and timeout cancel the short retry.
+- The tester confirmed basic 0.7.0 Deploy/Detonate gameplay. Its local log contains 50 started Detonate actions and 30 rejected Detonate presses; 20 of 26 idle scope rejections reached a ready state within 200 ms. The 0.7.1 retry remains untested in game.
+
 ## 0.7.0 — 2026-09-27
 
 - Port the PC mouse/keyboard runtime to Helldivers 2 Steam build 25480438. Left click Deploys C4; right click Detonates. Remove controller input from the current runtime, while retaining older versions as historical files.

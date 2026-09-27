@@ -16,7 +16,7 @@ flowchart LR
 
 `context_reader.lua` identifies the local mission/avatar, owned equipped C4 entity and descriptors. `action_reader.lua` checks its native weapon, ammo/chamber, action and conservative grounded-player state. Both firing-mode values are supported; unsupported state prevents a custom action.
 
-The only bound native calls in the current build are at RVAs `0x7caf40`, `0x744690`, `0x742900` and `0x7533c0`. Deploy follows original start/consume/count/after behavior; Detonate follows the original start path. The game handles the resulting animation, effects and network action. The mod does not directly spawn charges or explosions. These new entry points have been compared with the previous build's code but have not yet executed through the 0.7.0 package in gameplay.
+The only bound native calls in the current build are at RVAs `0x7caf40`, `0x744690`, `0x742900` and `0x7533c0`. Deploy follows original start/consume/count/after behavior; Detonate follows the original start path. The game handles the resulting animation, effects and network action. The mod does not directly spawn charges or explosions. The tester reported basic 0.7.0 gameplay operation; the 0.7.1 short-click retry has not yet been run in game.
 
 The runtime verifies the game module SHA-256 and 28 native signatures before acquiring the gate and before actions. These assumptions are specific to game build `25480438`, not portable offsets for arbitrary updates.
 
@@ -30,7 +30,7 @@ Weapon changes, pauses, shutdown and failures restore the saved C4 through a fre
 
 Only engine Mouse and Keyboard input feed the current edge router. The gamepad modules remain solely to reproduce earlier releases and are not embedded in `src/c4_pc_auto.lua`.
 
-The router accepts fresh presses after a fully released baseline. Simultaneous requests prefer Detonate. An action lock observes native active/inactive lifecycle changes; at most one pending request is kept within its original 1.5-second deadline. Reload waiting follows the existing implementation; a new pre-trigger feature was explicitly out of scope.
+The router accepts fresh presses after a fully released baseline. Simultaneous requests prefer Detonate. The PC controller alone keeps an RMB Detonate edge for at most 200 ms when only the conservative avatar-scope check transiently vetoes it. It rechecks the same C4 and all native admission conditions; if an owned Deploy is still active, it transfers the original press time into the existing one-slot queue. An action lock observes native active/inactive lifecycle changes; pending requests retain their original 1.5-second deadline. No left-click pre-trigger was added.
 
 Automatic mode starts with the mod. R and other guard keys pause input instead of permanently clearing the enable state. OS foreground ownership and read-only engine focus/cursor signals are checked before and after the original update. Pauses clear pending and input baselines; normal operation resumes after release. `mouse_focus` is logged rather than required.
 
@@ -40,6 +40,6 @@ These signals are not a complete UI state machine. Cursorless menus remain a val
 
 Memory/code verification, logging and original-callback failures stop new custom actions and attempt Fire restoration. The automatic mode does not restart a latched fault. Callback return values and original exceptions are preserved.
 
-Four rotating logs retain at most four 4 MiB segments. `capture_enabled` indicates that automatic mode is running; `fire_gate_active` indicates current C4 ownership; `gameplay_guard.runtime_state` records a transient pause reason. F7 adds a marker, while F6 has no effect in this version.
+Four rotating logs retain at most four 4 MiB segments. `capture_enabled` indicates that automatic mode is running; `fire_gate_active` indicates current C4 ownership; `gameplay_guard.runtime_state` records a transient pause reason. `scope_grace_started`, `scope_grace_ready` and `scope_grace_dropped` diagnose the short RMB retry; `action_call.press_to_call_ms` records request latency. F7 adds a marker, while F6 has no effect in this version.
 
 See the [historical native research](../research/docs/NATIVE_EXP03.md), [Fire routing analysis](../research/docs/NATIVE_EXP04.md) and [validation](VALIDATION.md).

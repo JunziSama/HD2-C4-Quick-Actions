@@ -1,9 +1,9 @@
-HD2 C4 Quick Actions v0.7.0 (PC mouse and keyboard only)
+HD2 C4 Quick Actions v0.7.1 (PC mouse and keyboard only)
 Target game build: 25480438
 Requires Bingus Shared Loader v18 / API 1 (installed separately).
 
 INSTALL
-Close the game. Import HD2-C4-Quick-Actions-v0.7.0-PC.zip into your mod
+Close the game. Import HD2-C4-Quick-Actions-v0.7.1-PC.zip into your mod
 manager, enable this mod and Bingus Shared Loader v18, then deploy.
 Disable earlier C4 Quick Actions packages so only one version is enabled.
 To remove it, disable the mod and redeploy with your mod manager.
@@ -14,7 +14,10 @@ Hold the C4 detonator, release both mouse buttons, then:
   Right mouse button: Detonate C4
 The mapping works independently of the selected C4 firing mode.
 There is no F6 toggle. R retains the game's reload behavior.
-Reload, menus, visible UI and focus loss pause custom input; release both
+An RMB press briefly blocked by avatar state can wait up to 200 ms. The
+same C4 and native action conditions are rechecked; releasing RMB does not
+cancel this brief retry. Original Aim behavior remains.
+Reload, menus, visible UI and focus loss cancel the retry and pause custom input; release both
 mouse buttons before pressing again. F7 adds an optional diagnostic marker.
 Other weapons keep their original mouse behavior. This version has no
 controller input route.
@@ -23,23 +26,25 @@ VALIDATION
 The game.dll disk hash and 28 live code signatures were checked against
 build 25480438. Read-only checks inside a mission confirmed local C4
 identity, both firing modes and native action admission states. PC input
-routing passed offline tests. The new package has not executed Deploy or
-Detonate in game; visual behavior, multiplayer and unusual UI/movement
-states still require gameplay verification. Older 0.6.x gameplay records
-refer to build 24826606 and do not validate this package.
+routing passed offline tests. The tester reported basic 0.7.0 Deploy and
+Detonate gameplay; its local log confirms native action starts and some
+short RMB rejections. The 0.7.1 retry is not yet gameplay tested.
+Multiplayer and unusual UI/movement states still require verification.
 
 LOGS
 The loader writes C4DualInput_<session>_part1.log through part4.log under
 %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs, with four rotating 4 MiB parts.
-The runtime version is 0.7.0-exp07.
+The runtime version is 0.7.1-exp07.
 
 简体中文
 退出游戏后，用 Mod Manager 导入本 ZIP，启用本 Mod 和单独安装的 Loader v18，
 再部署。请只启用一个 C4 Quick Actions 版本。
 手持 C4 引爆器并松开鼠标：左键丢出，右键引爆；其他武器保持原操作。
 本版只支持 PC 鼠标键盘，不读取手柄输入；无需 F6。
+右键短按若遇到短暂角色状态阻挡，最多等待 200 毫秒；松开右键不取消此次等待。
+恢复前会重新确认同一把 C4 和原生动作条件；原版瞄准行为保留。
 补弹、菜单和失焦期间会暂停，恢复后先松开鼠标键再重新按下。
-已完成当前游戏版本的只读状态核对及离线测试，新的实际丢出和引爆
-效果仍需进游戏验证。本 ZIP 只在本地生成，不会自动替换游戏目录中的 Mod。
+0.7.0 基本丢出和引爆已有用户实机反馈；0.7.1 短按修复仍需实机验证。
+本 ZIP 只在本地生成，不会自动替换游戏目录中的 Mod。
 
 Project-authored code and documentation: MIT License. See LICENSE.txt.

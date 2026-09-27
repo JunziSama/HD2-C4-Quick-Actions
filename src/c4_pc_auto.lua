@@ -896,17 +896,19 @@ end
 
 end)()
 local ActionController=(function()
--- Test-key routing, independent of FFI and native layout.
+-- PC-only action routing. Briefly retain an RMB edge through a transient
+-- avatar-scope veto, then recheck the complete native admission state.
 -- Native active -> inactive is an observed lifecycle end, NOT gameplay success.
 local M={}
 function M.new(backend,emit,options)
     options=options or {}
     local labels={DEPLOY=options.deploy_input or 'F8',DETONATE=options.detonate_input or 'F9'}
-    local self={latest={},last_sample=-math.huge,last_emit=-math.huge,lock=nil,pending=nil,
+    local self={latest={},last_sample=-math.huge,last_emit=-math.huge,lock=nil,pending=nil,grace=nil,
         fault=nil,serial=0,was_armed=false,last_key=nil}
     local function publish(kind,extra)
         local fields={action_lock=self.lock and self.lock.action or 'IDLE',
-            pending_action=self.pending and self.pending.action or 'NONE'}
+            pending_action=self.pending and self.pending.action or 'NONE',
+            scope_grace=self.grace and 'DETONATE' or 'NONE'}
         for k,v in pairs(extra or {}) do fields[k]=v end
         assert(emit(kind,fields),'action_log_unavailable')
     end
@@ -916,8 +918,16 @@ function M.new(backend,emit,options)
             publish('pending_dropped',{requested_action=old.action,reason=reason})
         end
     end
+    local function drop_grace(reason,now)
+        if self.grace then
+            local old=self.grace;self.grace=nil
+            publish('scope_grace_dropped',{requested_action='DETONATE',reason=reason,
+                wait_ms=now and now-old.at or nil,action_result='NOT_EXECUTED'})
+        end
+    end
     local function abandon(reason)
         drop_pending(reason)
+        drop_grace(reason)
         if self.lock then
             local old=self.lock;self.lock=nil
             publish('action_observation_ended',{requested_action=old.action,request_id=old.id,
@@ -946,6 +956,7 @@ function M.new(backend,emit,options)
         row.context_sample_age_ms=now-self.last_sample
         row.action_lock=self.lock and self.lock.action or 'IDLE'
         row.pending_action=self.pending and self.pending.action or 'NONE'
+        row.scope_grace=self.grace and 'DETONATE' or 'NONE'
         row.action_fault=self.fault or 'NONE'
         return row
     end
@@ -955,7 +966,7 @@ function M.new(backend,emit,options)
     local function unavailable_reason()
         return self.latest.action_context_error or self.latest.reason or 'no_fresh_c4_context'
     end
-    local function execute(action,now,cap,from_pending,request_input)
+    local function execute(action,now,cap,from_pending,request_input,pressed_at)
         if not cap then reject(action,unavailable_reason());return end
         if cap.blocked then reject(action,self.latest.action_gate);return end
         if cap.active then reject(action,'native_action_busy');return end
@@ -969,6 +980,7 @@ function M.new(backend,emit,options)
         -- This record must reach the file before any native side effect.
         publish('action_call',{requested_action=action,request_id=lock.id,
             action_result='CALL_BEGIN',ability_id=lock.ability,
+            press_to_call_ms=now-(pressed_at or now),
             input=from_pending and 'PENDING' or request_input or labels[action],
             original_input=request_input or labels[action]})
         local ok,result=pcall(backend.execute,action,cap)
@@ -1017,9 +1029,14 @@ function M.new(backend,emit,options)
             if request then reject(request,'arming_baseline') end
             return
         end
-        if self.fault then if request then reject(request,'fault_latched_restart_required') end;return end
+        if self.fault then
+            drop_grace('fault_latched_restart_required',now)
+            if request then reject(request,'fault_latched_restart_required') end
+            return
+        end
         if input.mouse then
             drop_pending('original_mouse_input')
+            drop_grace('original_mouse_input',now)
             if request then reject(request,'original_mouse_input') end
             request=nil
         end
@@ -1046,6 +1063,52 @@ function M.new(backend,emit,options)
             end
         end
         if self.pending and now-self.pending.at>1500 then drop_pending('pending_expired') end
+        -- Only the C4 avatar-scope veto gets a short retry window. No native
+        -- blocker, other weapon, focus/UI pause or stale identity may replay it.
+        if self.grace then
+            local g=self.grace
+            if now-g.at>200 then drop_grace('scope_grace_expired',now)
+            elseif cap.identity~=g.identity then drop_grace('identity_changed',now)
+            elseif request=='DEPLOY' or request=='BOTH' then
+                drop_grace('new_action_input',now)
+            else
+                if request=='DETONATE' then
+                    reject('DETONATE','scope_grace_coalesced');request=nil
+                end
+                local ready=self.latest.action_gate=='READY' and not cap.blocked and not cap.active
+                local own_busy=self.latest.action_gate=='NATIVE_ACTION_ACTIVE' and self.lock
+                    and cap.active and cap.identity==self.lock.identity
+                if ready or own_busy then
+                    self.grace=nil
+                    publish('scope_grace_ready',{requested_action='DETONATE',
+                        wait_ms=now-g.at,action_result='RECHECKED'})
+                    if self.lock then
+                        if not self.pending then
+                            self.pending={action='DETONATE',at=g.at,identity=g.identity,input=g.input}
+                            publish('action_queued',{requested_action='DETONATE',
+                                action_result='PENDING_ONE',reason='scope_grace_recovered'})
+                        else reject('DETONATE','pending_slot_full') end
+                    else
+                        execute('DETONATE',now,cap,true,g.input,g.at)
+                    end
+                    return
+                elseif self.latest.action_gate~='OUTSIDE_EXP03_AVATAR_SCOPE' then
+                    drop_grace('native_state_changed',now)
+                else
+                    return
+                end
+            end
+        end
+        if request=='DETONATE' and self.latest.action_gate=='OUTSIDE_EXP03_AVATAR_SCOPE'
+            and not self.latest.native_fire_held and not self.pending
+            and (not cap.active or self.lock and cap.identity==self.lock.identity) then
+            self.grace={at=now,identity=cap.identity,input=request_input or labels.DETONATE}
+            publish('action_request',{requested_action='DETONATE',action_result='REQUESTED',
+                input=self.grace.input})
+            publish('scope_grace_started',{requested_action='DETONATE',
+                action_result='WAITING_FOR_SCOPE',deadline_ms=200})
+            return
+        end
         if cap.interrupt or input.mouse or (cap.blocked and not self.lock) then
             drop_pending('controls_or_native_state_blocked')
             if request then reject(request,'controls_or_native_state_blocked') end
@@ -1074,7 +1137,7 @@ function M.new(backend,emit,options)
             end
             self.pending=nil
             if p.identity==cap.identity then
-                execute(p.action,now,cap,true,p.input)
+                execute(p.action,now,cap,true,p.input,p.at)
                 if request then reject(request,'pending_dispatched_this_callback') end
                 return
             end
@@ -1123,7 +1186,7 @@ local ActionLayout={module_sha256="2e2c3b7c2500646dadd5f2b4c6e0504dbb7e7896139f6
 -- EXP07: automatic PC mouse/keyboard C4 routing; temporary reload/UI/focus pauses.
 local existing = rawget(_G, 'HD2C4BoundaryProbe')
 if existing then return existing end
-local M = {version='0.7.0-exp07', capture=true, tick=0, elapsed_ms=0,
+local M = {version='0.7.1-exp07', capture=true, tick=0, elapsed_ms=0,
            status='starting', records=0, bytes=0, disabled=false}
 rawset(_G, 'HD2C4BoundaryProbe', M)
 local loader = rawget(_G, 'CowboyBingusModLoader')

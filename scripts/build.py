@@ -62,8 +62,8 @@ def main():
         sha256=sha(target.read_bytes()),bytes=target.stat().st_size,
         entries={name:sha(data) for name,data in content.items()},source_sha256=sha(source_bytes),
         plaintext_matches_tested_source=True,native_action_sequence_unchanged=True,
-        native_layout_ported=project['version']=='0.7.0',
-        controller_support=project['version']!='0.7.0',
+        native_layout_ported=True,
+        controller_support=False,
         native_actions_live_tested=False,
         resources=1,loader_included=False,installed=False,game_executed_by_build=False)
     (ROOT/'evidence/public-package.json').write_text(json.dumps(report,indent=2)+'\n',newline='\n')

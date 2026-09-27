@@ -1,14 +1,16 @@
 # Validation record
 
-## Current 0.7.0 PC port
+## Current 0.7.1 PC short-click fix
 
-Version **0.7.0** targets Steam build **25480438** and accepts only PC mouse/keyboard input: LMB Deploy, RMB Detonate. The gamepad input module is absent from the generated runtime. The prior 0.6.1 source and ZIP remain as historical outputs.
+Version **0.7.1** targets Steam build **25480438** and accepts only PC mouse/keyboard input: LMB Deploy, RMB Detonate. The gamepad input module is absent from the generated runtime. The prior 0.6.1 and 0.7.0 ZIPs remain as historical outputs.
 
 The current local `game.dll` disk SHA-256 is `2e2c3b7c2500646dadd5f2b4c6e0504dbb7e7896139f64cddc0d1813c718f51e`. All **28** selected native signatures in [pc-layout.json](../evidence/pc-layout.json) matched the loaded game module. Native action entry points and the C4 Fire bit were mapped through old/new code comparison; the new live C4 flags were observed as `0x2148`.
 
-Read-only evaluation of the **ported Lua context and action readers** during a local mission accepted the equipped C4 in both selected modes. In Deploy mode it found the C4 resource, ability template, rounds configuration, chamber token 55 and `action_gate=READY`. In Detonate mode it found the same C4 identity, chamber token 0, `deploy_ammo_ready=false` and `action_gate=READY`. The latter is expected: Detonate must not require Deploy ammo. The [sanitized observation](../evidence/pc-live-context.json) contains no pointers, entity IDs or game paths. These checks did not install the new Mod, call native action functions, change game memory or verify visual Deploy/Detonate effects.
+The earlier read-only evaluation of the **ported Lua context and action readers** during a local mission accepted the equipped C4 in both selected modes. In Deploy mode it found the C4 resource, ability template, rounds configuration, chamber token 55 and `action_gate=READY`. In Detonate mode it found the same C4 identity, chamber token 0, `deploy_ammo_ready=false` and `action_gate=READY`. The [sanitized observation](../evidence/pc-live-context.json) contains no pointers, entity IDs or game paths. That check did not execute actions; the later 0.7.0 user test did.
 
-`python -B scripts/check_pc.py` runs PC input edge tests at 30/60/144 Hz, simultaneous-button priority, reload/UI release baselines, other-weapon routing, controller absence and Lua syntax. Its [machine-readable result](../evidence/pc-offline-tests.json) records the source and input hashes. The [package report](../evidence/public-package.json) verifies that the ZIP's Lua bytes match this tested source. **Actual 0.7.0 Deploy/Detonate gameplay is still unverified.**
+The tester reported that 0.7.0 could Deploy and Detonate in game, but short RMB presses were intermittent. The local 0.7.0 log recorded **50 Detonate native starts**, **30 Detonate rejections** under the conservative avatar-scope veto, and no action faults. Of 26 idle Detonate rejections, 20 reached `READY` on the same C4 within 200 ms. These counts show the input was recognized; they do not prove that native Aim caused the veto. Raw logs remain local and are not published.
+
+`python -B scripts/check_pc.py` runs PC edge tests at 30/60/144 Hz, short RMB retry and cancellation tests, other-weapon routing, controller absence and Lua syntax. Its [machine-readable result](../evidence/pc-offline-tests.json) records source/input hashes. The [package report](../evidence/public-package.json) verifies that the ZIP's Lua bytes match this tested source. **The 0.7.1 retry itself has not yet been tested in game.**
 
 ## Local 0.6.1 package
 
@@ -62,6 +64,6 @@ These are synthetic-memory/mock-native checks, not game execution. The [machine-
 - Full sprint/dive/vault/stagger/death interruption matrix.
 - Every menu/chat/overlay state, especially those without a visible cursor.
 - Builds other than the tested game module.
-- Actual Deploy and Detonate calls and visual effects in 0.7.0 gameplay.
+- Actual 0.7.1 short-click retry and visual result in gameplay.
 
 Historical notes retain the conclusions known at each stage and may say “pending” for a case later tested. This document is the current release status.
